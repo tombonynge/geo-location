@@ -93,8 +93,8 @@ class Graphics {
         document.body.appendChild(this.posLabel);
     }
 
-    setISSPositionOnGlobe(lat, lon) {
-        const v = this.calculateVector(lat, lon, 108);
+    setISSPositionOnGlobe(lat, lon, alt) {
+        const v = this.calculateVector(lat, lon, alt);
         this.iss.position.set(v.x, v.y, v.z);
         this.globe.add(this.iss);
         this.iss.lookAt(new THREE.Vector3(0, 0, 0));
@@ -117,7 +117,6 @@ class Graphics {
         this.sunAnchor.rotateY((-angle * Math.PI) / 180); //set to current UTC position,
         this.sunAnchor.updateMatrixWorld();
         this.sun.getWorldPosition(this.light.position);
-        console.log("sunPosition: ", this.light.position);
     }
 
     createLabel() {
@@ -127,7 +126,6 @@ class Graphics {
         textLabel.style.width = 100;
         textLabel.style.height = 20;
         textLabel.style.color = "white";
-        // textLabel.innerHTML = text;
         return textLabel;
     }
 
@@ -161,39 +159,34 @@ class Graphics {
     }
 }
 
-// function makeRequest(method, url) {
-//     return new Promise(function (resolve, reject) {
-//         let xhr = new XMLHttpRequest();
-//         xhr.open(method, url);
-//         xhr.onload = function () {
-//             if (this.status >= 200 && this.status < 300) {
-//                 resolve(xhr.response);
-//             } else {
-//                 reject({
-//                     status: this.status,
-//                     statusText: xhr.statusText,
-//                 });
-//             }
-//         };
-//         xhr.onerror = function () {
-//             reject({
-//                 status: this.status,
-//                 statusText: xhr.statusText,
-//             });
-//         };
-//         xhr.send();
-//     });
-// }
-
-// async function getISSPosition() {
-//     let result = await makeRequest("GET", "http://api.open-notify.org/iss-now.json");
-//     return result;
-// }
+function makeRequest(method, url) {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
+        xhr.send();
+    });
+}
 
 async function getISSPosition() {
-    const result = await axios.get("http://api.open-notify.org/iss-now.json");
-    console.log(result);
-    return result.data;
+    let result = await makeRequest("GET", "https://api.wheretheiss.at/v1/satellites/25544");
+    // console.log(result);
+    return result;
 }
 
 function getApproxSunPosition() {
@@ -208,6 +201,24 @@ function getApproxSunPosition() {
     return angle;
 }
 
+function updateISS(graphics, result) {
+    let data = JSON.parse(result);
+    let altitude = 100 + data.altitude * 0.015;
+    graphics.setISSPositionOnGlobe(data.latitude, data.longitude, altitude);
+    issPos.innerHTML = `<p>ISS coordinates: <br/> Latitude:${data.latitude} <br/>Longitude:${data.longitude}<br/>Altitude:${data.altitude}</p> `;
+}
+
+function getUTCTime() {
+    let d = new Date();
+    function getDigits(num) {
+        if (num < 10) {
+            return "0" + num;
+        }
+        return num;
+    }
+    document.getElementById("time").innerText = `At UTC: ${getDigits(d.getUTCHours())}:${getDigits(d.getUTCMinutes())}:${getDigits(d.getUTCSeconds())}`;
+}
+
 const graphics = new Graphics();
 graphics.initialise();
 graphics.animate();
@@ -215,12 +226,13 @@ const sunPosition = getApproxSunPosition();
 graphics.setSunPosition(sunPosition);
 const myPos = document.getElementById("myPos");
 const issPos = document.getElementById("issPos");
+getUTCTime();
 
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             graphics.setMyPositionOnGlobe(position.coords.latitude, position.coords.longitude);
-            myPos.innerHTML = `<p>Your coordinates: <br/> latitude:${position.coords.latitude} <br/>longitude:${position.coords.longitude}</p>`;
+            myPos.innerHTML = `<p>Your coordinates: <br/> Latitude:${position.coords.latitude} <br/>Longitude:${position.coords.longitude}</p>`;
         },
         (error) => {
             console.log(error);
@@ -232,9 +244,7 @@ if (navigator.geolocation) {
 }
 
 getISSPosition().then((result) => {
-    const coords = result.iss_position;
-    graphics.setISSPositionOnGlobe(coords.latitude, coords.longitude);
-    issPos.innerHTML = `<p>ISS coordinates: <br/> latitude:${coords.latitude} <br/>longitude:${coords.longitude}</p>`;
+    updateISS(graphics, result);
 });
 
 window.addEventListener(
@@ -248,8 +258,7 @@ window.addEventListener(
 const btn = document.getElementById("btn");
 btn.addEventListener("click", () => {
     getISSPosition().then((result) => {
-        const coords = result.iss_position;
-        graphics.setISSPositionOnGlobe(coords.latitude, coords.longitude);
-        issPos.innerHTML = `<p>ISS coordinates: <br/> latitude:${coords.latitude} <br/>longitude:${coords.longitude}</p>`;
+        getUTCTime();
+        updateISS(graphics, result);
     });
 });
