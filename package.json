@@ -1,23 +1,24 @@
 {
-  "name": "geolocation",
-  "version": "1.0.0",
-  "description": "Small project to track users location on the Earth's surface and the location of the ISS in orbit.",
-  "main": "index.js",
-  "dependencies": {
-    "express": "^4.17.1"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tombonynge/geo-location.git"
-  },
-  "author": "Tom Bonynge",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tombonynge/geo-location/issues"
-  },
-  "homepage": "https://github.com/tombonynge/geo-location#readme"
+    "name": "geolocation",
+    "version": "1.0.0",
+    "description": "Small project to track users location on the Earth's surface and the location of the ISS in orbit.",
+    "main": "index.js",
+    "dependencies": {
+        "express": "^4.17.1"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tombonynge/geo-location.git"
+    },
+    "author": "Tom Bonynge",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/tombonynge/geo-location/issues"
+    },
+    "homepage": "https://github.com/tombonynge/geo-location#readme"
 }
