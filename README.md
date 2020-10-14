@@ -8,4 +8,4 @@ Uses:
 -   Navigator *users geolocation.*
 -   UTC time *suns location.*
 
-Check it out here: https://geolocator-iss.herokuapp.com/
+Check it out: https://geolocator-iss.herokuapp.com/
