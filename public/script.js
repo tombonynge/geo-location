@@ -198,6 +198,7 @@ function getApproxSunPosition() {
     let secondsElapsed = UTCHours * 60 * 60 + UTCMins * 60 + UTCSecs;
     let percentOfDay = secondsElapsed / 86400;
     let angle = 360 * percentOfDay;
+
     return angle;
 }
 
