@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <title>GeoLocation</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="view" id="view"></div>
+            <div class="info" id="info">
+                <div id="myPos"></div>
+                <div id="issPos"></div>
+            </div>
+            <button class="btn" id="btn">Update ISS</button>
+            <div class="credits">
+                <p>
+                    Earth textures used can be found here
+                    <a href="http://planetpixelemporium.com/earth8081.html" target="_blank">http://planetpixelemporium.com/earth8081.html</a>
+                </p>
+                <p>ISS coordinates provided by <a href="http://api.open-notify.org/" target="_blank">http://api.open-notify.org/</a></p>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/107/three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <script src="script.js"></script>
+</html>

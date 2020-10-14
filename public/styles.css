@@ -1,0 +1,61 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.wrapper {
+    /* width: 100vw;
+    height: 100vh; */
+    position: relative;
+}
+
+.view {
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    margin: 0;
+}
+
+.info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+}
+
+.info > div {
+    margin-bottom: 1rem;
+}
+
+.credits {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 0.8rem;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: cyan;
+}
+
+.text-label {
+    width: 50px;
+    border: 1px solid white;
+    text-align: center;
+}
+
+.btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
