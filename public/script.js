@@ -161,33 +161,39 @@ class Graphics {
     }
 }
 
-function makeRequest(method, url) {
-    return new Promise(function (resolve, reject) {
-        let xhr = new XMLHttpRequest();
-        xhr.open(method, url);
-        xhr.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText,
-                });
-            }
-        };
-        xhr.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText,
-            });
-        };
-        xhr.send();
-    });
-}
+// function makeRequest(method, url) {
+//     return new Promise(function (resolve, reject) {
+//         let xhr = new XMLHttpRequest();
+//         xhr.open(method, url);
+//         xhr.onload = function () {
+//             if (this.status >= 200 && this.status < 300) {
+//                 resolve(xhr.response);
+//             } else {
+//                 reject({
+//                     status: this.status,
+//                     statusText: xhr.statusText,
+//                 });
+//             }
+//         };
+//         xhr.onerror = function () {
+//             reject({
+//                 status: this.status,
+//                 statusText: xhr.statusText,
+//             });
+//         };
+//         xhr.send();
+//     });
+// }
+
+// async function getISSPosition() {
+//     let result = await makeRequest("GET", "http://api.open-notify.org/iss-now.json");
+//     return result;
+// }
 
 async function getISSPosition() {
-    let result = await makeRequest("GET", "http://api.open-notify.org/iss-now.json");
-    return result;
+    const result = await axios.get("http://api.open-notify.org/iss-now.json");
+    console.log(result);
+    return result.data;
 }
 
 function getApproxSunPosition() {
@@ -226,7 +232,7 @@ if (navigator.geolocation) {
 }
 
 getISSPosition().then((result) => {
-    const coords = JSON.parse(result).iss_position;
+    const coords = result.iss_position;
     graphics.setISSPositionOnGlobe(coords.latitude, coords.longitude);
     issPos.innerHTML = `<p>ISS coordinates: <br/> latitude:${coords.latitude} <br/>longitude:${coords.longitude}</p>`;
 });
@@ -242,7 +248,7 @@ window.addEventListener(
 const btn = document.getElementById("btn");
 btn.addEventListener("click", () => {
     getISSPosition().then((result) => {
-        const coords = JSON.parse(result).iss_position;
+        const coords = result.iss_position;
         graphics.setISSPositionOnGlobe(coords.latitude, coords.longitude);
         issPos.innerHTML = `<p>ISS coordinates: <br/> latitude:${coords.latitude} <br/>longitude:${coords.longitude}</p>`;
     });
